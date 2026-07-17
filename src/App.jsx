@@ -8,6 +8,8 @@ export default function App() {
   const [diagnosisResult, setDiagnosisResult] = useState(null);
   const [isDiagnosing, setIsDiagnosing] = useState(false);
 
+  const [userAnswers, setUserAnswers] = useState(null);
+
   // Load Initial Quiz & Graph Data
   useEffect(() => {
     fetch("http://localhost:5000/api/quiz")
@@ -18,6 +20,7 @@ export default function App() {
 
   // Handle Quiz Submission
   const handleQuizSubmit = async (answers) => {
+    setUserAnswers(answers);
     setIsDiagnosing(true);
     try {
       const response = await fetch("http://localhost:5000/api/diagnose", {
@@ -26,7 +29,7 @@ export default function App() {
         body: JSON.stringify({ answers }),
       });
       const result = await response.json();
-      setDiagnosisResult(result); // This will update the graph colors & show the AI panel!
+      setDiagnosisResult(result); 
     } catch (error) {
       console.error("Diagnosis error:", error);
     } finally {
@@ -37,22 +40,25 @@ export default function App() {
   // Reset Quiz
   const handleReset = () => {
     setDiagnosisResult(null);
+    setUserAnswers(null);
   };
 
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col items-center p-4 lg:p-8 font-sans text-slate-800">
+      {/* Top Navigation Bar */}
       <div className="w-full max-w-7xl mb-8 flex justify-between items-center">
         <h1 className="text-3xl lg:text-4xl font-extrabold text-blue-600 tracking-tight">
           Concept Dependency Debugger
         </h1>
         <div className="bg-slate-200 px-3 py-1 rounded-full text-xs font-bold text-slate-500 uppercase tracking-wide">
-          Powered by Groq
+          Powered by Groq AI
         </div>
       </div>
 
+      {/* Main Layout Content */}
       <div className="flex flex-col lg:flex-row w-full max-w-7xl gap-8 h-auto lg:h-[650px]">
-        {/* Left Column: Quiz or Diagnosis Result */}
-        <div className="w-full lg:w-1/3 bg-white p-6 lg:p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col">
+        {/* Left Column: Quiz or Diagnosis Result (Relative & hidden overflow for the fixed button) */}
+        <div className="w-full lg:w-1/3 bg-white p-6 lg:p-8 rounded-2xl shadow-lg border border-slate-200 flex flex-col relative overflow-hidden">
           {isDiagnosing ? (
             <div className="flex flex-col items-center justify-center h-full text-slate-500 space-y-4">
               <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
@@ -61,7 +67,12 @@ export default function App() {
               </p>
             </div>
           ) : diagnosisResult ? (
-            <DiagnosisPanel result={diagnosisResult} onReset={handleReset} />
+            <DiagnosisPanel
+              result={diagnosisResult}
+              onReset={handleReset}
+              questions={quizData?.questions?.questions || quizData?.questions}
+              userAnswers={userAnswers}
+            />
           ) : (
             <QuizFlow
               questions={quizData?.questions?.questions}
