@@ -64,7 +64,7 @@ export default function App() {
             <DiagnosisPanel result={diagnosisResult} onReset={handleReset} />
           ) : (
             <QuizFlow
-              questions={quizData?.questions}
+              questions={quizData?.questions?.questions}
               onSubmit={handleQuizSubmit}
             />
           )}
