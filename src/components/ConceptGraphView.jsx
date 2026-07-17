@@ -3,58 +3,68 @@ import ReactFlow, { Background, Controls, MarkerType } from "reactflow";
 import "reactflow/dist/style.css";
 
 export default function ConceptGraphView({ graphData, scores }) {
+  // Memoize the computation of nodes and edges to optimize rendering performance
   const { nodes, edges } = useMemo(() => {
     if (!graphData || !graphData.concepts) return { nodes: [], edges: [] };
 
     const newNodes = [];
     const newEdges = [];
 
-    // Staggered layout coordinates
-    let y = 50;
+    // Initial vertical position for the first node
+    let yPosition = 40;
 
     graphData.concepts.forEach((concept, index) => {
-      // Default colors (Gray)
-      let bgColor = "#f8fafc";
-      let borderColor = "#94a3b8";
+      // Base styling for unassessed topics using solid hex colors
+      let backgroundColor = "#ffffff";
+      let borderColor = "#cbd5e1";
+      let fontColor = "#334155";
 
-      // Update colors based on engine scores
+      // Apply dynamic solid styling based on the assessment scores
       if (scores && scores[concept.id]) {
         const status = scores[concept.id].status;
         if (status === "strong") {
-          bgColor = "#dcfce3";
-          borderColor = "#16a34a";
-        } // Green for mastery
+          backgroundColor = "#dcfce3"; // Solid Light Green
+          borderColor = "#22c55e";
+          fontColor = "#166534";
+        }
         if (status === "weak") {
-          bgColor = "#fee2e2";
-          borderColor = "#dc2626";
-        } // Red for weak point
+          backgroundColor = "#fee2e2"; // Solid Light Red
+          borderColor = "#ef4444";
+          fontColor = "#991b1b";
+        }
       }
 
+      // Construct the node configuration ensuring high contrast and visibility
       newNodes.push({
         id: concept.id,
-        position: { x: index % 2 === 0 ? 150 : 350, y: y }, // Zig-zag pattern
+        position: { x: index % 2 === 0 ? 80 : 300, y: yPosition },
         data: { label: concept.name },
         style: {
-          background: bgColor,
+          background: backgroundColor,
+          color: fontColor,
           border: `2px solid ${borderColor}`,
-          padding: "12px",
-          borderRadius: "8px",
-          fontWeight: "bold",
-          width: 180,
+          padding: "16px 20px",
+          borderRadius: "12px",
+          fontWeight: "800",
+          fontSize: "14px",
+          width: 190,
           textAlign: "center",
+          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
         },
       });
-      y += 100; // Push next node down
 
-      // Create arrows for prerequisites
+      // Increment vertical offset for the next node in the sequence
+      yPosition += 115;
+
+      // Construct prerequisite connection arrows
       concept.prerequisites.forEach((prereq) => {
         newEdges.push({
-          id: `e-${prereq}-${concept.id}`,
+          id: `edge-${prereq}-${concept.id}`,
           source: prereq,
           target: concept.id,
           animated: true,
-          style: { stroke: "#475569", strokeWidth: 2 },
-          markerEnd: { type: MarkerType.ArrowClosed, color: "#475569" },
+          style: { stroke: "#94a3b8", strokeWidth: 2 },
+          markerEnd: { type: MarkerType.ArrowClosed, color: "#94a3b8" },
         });
       });
     });
@@ -63,10 +73,10 @@ export default function ConceptGraphView({ graphData, scores }) {
   }, [graphData, scores]);
 
   return (
-    <div className="w-full h-full min-h-[500px]">
+    <div className="w-full h-full min-h-[450px]">
       <ReactFlow nodes={nodes} edges={edges} fitView>
-        <Background color="#cbd5e1" gap={16} />
-        <Controls />
+        <Background color="#cbd5e1" gap={20} size={1} />
+        <Controls showInteractive={false} />
       </ReactFlow>
     </div>
   );
