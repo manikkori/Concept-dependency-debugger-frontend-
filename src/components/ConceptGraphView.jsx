@@ -35,9 +35,10 @@ export default function ConceptGraphView({ graphData, scores }) {
       }
 
       // Construct the node configuration ensuring high contrast and visibility
+      // Tighter X coordinates (50 & 250) so they don't clip off mobile screens
       newNodes.push({
         id: concept.id,
-        position: { x: index % 2 === 0 ? 80 : 300, y: yPosition },
+        position: { x: index % 2 === 0 ? 50 : 250, y: yPosition },
         data: { label: concept.name },
         style: {
           background: backgroundColor,
@@ -47,7 +48,7 @@ export default function ConceptGraphView({ graphData, scores }) {
           borderRadius: "12px",
           fontWeight: "800",
           fontSize: "14px",
-          width: 190,
+          width: 180,
           textAlign: "center",
           boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
         },
@@ -72,9 +73,15 @@ export default function ConceptGraphView({ graphData, scores }) {
     return { nodes: newNodes, edges: newEdges };
   }, [graphData, scores]);
 
+  // Using absolute inset-0 forces ReactFlow to respect the parent container's dimensions on mobile
   return (
-    <div className="w-full h-full min-h-[450px]">
-      <ReactFlow nodes={nodes} edges={edges} fitView>
+    <div className="absolute inset-0 w-full h-full">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        fitView
+        fitViewOptions={{ padding: 0.2 }}
+      >
         <Background color="#cbd5e1" gap={20} size={1} />
         <Controls showInteractive={false} />
       </ReactFlow>
