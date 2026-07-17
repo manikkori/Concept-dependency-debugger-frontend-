@@ -20,6 +20,11 @@ export default function App() {
   const [isDiagnosing, setIsDiagnosing] = useState(false);
   const [userAnswers, setUserAnswers] = useState(null);
 
+  // Dynamically set the API Base URL from Environment Variables
+  // Falls back to localhost if the env variable is missing
+  const API_BASE_URL =
+    import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
   // Apply the theme class to the root document element and save to LocalStorage
   useEffect(() => {
     localStorage.setItem("theme", theme);
@@ -30,20 +35,20 @@ export default function App() {
     }
   }, [theme]);
 
-  // Fetch initial graph and question data from the backend API
+  // Fetch initial graph and question data from the dynamically assigned backend API
   useEffect(() => {
-    fetch("http://localhost:5000/api/quiz")
+    fetch(`${API_BASE_URL}/api/quiz`)
       .then((res) => res.json())
       .then((data) => setQuizData(data))
       .catch((err) => console.error("Error fetching quiz data:", err));
-  }, []);
+  }, [API_BASE_URL]);
 
-  // Submit user answers and fetch the AI diagnosis result
+  // Submit user answers and fetch the AI diagnosis result via dynamic routing
   const handleQuizSubmit = async (answers) => {
     setUserAnswers(answers);
     setIsDiagnosing(true);
     try {
-      const response = await fetch("http://localhost:5000/api/diagnose", {
+      const response = await fetch(`${API_BASE_URL}/api/diagnose`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ answers }),
@@ -68,7 +73,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans relative">
-      {/* Stable Ethereal Glass Background Blobs (Fixed to prevent double scrollbars) */}
+      {/* Stable Ethereal Glass Background Blobs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-[-15%] left-[-10%] w-[45rem] h-[45rem] bg-violet-400/30 dark:bg-violet-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-blob"></div>
         <div
@@ -129,7 +134,7 @@ export default function App() {
           <LandingPage onStart={() => setCurrentPage("app")} />
         ) : (
           <div className="flex flex-col lg:flex-row w-full gap-6 h-auto lg:h-[600px]">
-            {/* Left Column: Assessment Interface (Glassy Panel adhering to Dark Mode) */}
+            {/* Left Column: Assessment Interface (Glassy Panel) */}
             <div className="w-full lg:w-1/3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl p-6 rounded-3xl shadow-xl border border-white/60 dark:border-slate-700/50 flex flex-col relative overflow-hidden transition-colors">
               {isDiagnosing ? (
                 <div className="flex flex-col items-center justify-center h-full text-slate-600 dark:text-slate-300 space-y-4">
@@ -155,7 +160,7 @@ export default function App() {
               )}
             </div>
 
-            {/* Right Column: Interactive Graph View (STRICTLY SOLID WHITE for highest contrast) */}
+            {/* Right Column: Interactive Graph View (Strictly Solid White) */}
             <div className="w-full lg:w-2/3 bg-white p-6 rounded-3xl shadow-xl border border-slate-200 flex flex-col">
               <h2 className="text-xl font-bold mb-4 border-b border-slate-100 pb-3 text-slate-800 flex items-center justify-between">
                 <span className="flex items-center gap-2">
