@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import ReactFlow, { Background, Controls, MarkerType } from "reactflow";
 import "reactflow/dist/style.css";
 
-export default function ConceptGraphView({ graphData, scores }) {
+export default function ConceptGraphView({ graphData, scores, rootCauseId }) {
   // Memoize the computation of nodes and edges to optimize rendering performance
   const { nodes, edges } = useMemo(() => {
     if (!graphData || !graphData.concepts) return { nodes: [], edges: [] };
@@ -19,13 +19,21 @@ export default function ConceptGraphView({ graphData, scores }) {
       let borderColor = "#cbd5e1";
       let fontColor = "#334155";
 
-      // Apply dynamic solid styling based on the assessment scores
+      const status = scores?.[concept.id]?.status;
+      const isRootCause = rootCauseId === concept.id;
+      const isAffected = status === "weak" && !isRootCause;
+
+      // Apply dynamic styling based on the assessment scores.
       if (scores && scores[concept.id]) {
-        const status = scores[concept.id].status;
         if (status === "strong") {
           backgroundColor = "#dcfce3"; // Solid Light Green
           borderColor = "#22c55e";
           fontColor = "#166534";
+        }
+        if (status === "borderline") {
+          backgroundColor = "#fef3c7"; // Solid Light Yellow
+          borderColor = "#eab308";
+          fontColor = "#854d0e";
         }
         if (status === "weak") {
           backgroundColor = "#fee2e2"; // Solid Light Red
@@ -39,18 +47,40 @@ export default function ConceptGraphView({ graphData, scores }) {
       newNodes.push({
         id: concept.id,
         position: { x: index % 2 === 0 ? 50 : 250, y: yPosition },
-        data: { label: concept.name },
+        data: {
+          label: (
+            <div className="flex flex-col items-center gap-1.5 leading-tight">
+              <span>{concept.name}</span>
+              {isRootCause && (
+                <span className="rounded-full bg-red-600 px-2 py-0.5 text-[9px] font-black tracking-wider text-white">
+                  ROOT CAUSE
+                </span>
+              )}
+              {isAffected && (
+                <span className="rounded-full bg-red-100 px-2 py-0.5 text-[9px] font-black tracking-wider text-red-700">
+                  AFFECTED
+                </span>
+              )}
+            </div>
+          ),
+        },
         style: {
           background: backgroundColor,
           color: fontColor,
-          border: `2px solid ${borderColor}`,
+          border: isRootCause
+            ? `4px solid ${borderColor}`
+            : isAffected
+              ? `2px dashed ${borderColor}`
+              : `2px solid ${borderColor}`,
           padding: "16px 20px",
           borderRadius: "12px",
           fontWeight: "800",
           fontSize: "14px",
           width: 180,
           textAlign: "center",
-          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+          boxShadow: isRootCause
+            ? "0 8px 16px -4px rgba(239, 68, 68, 0.35)"
+            : "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
         },
       });
 
@@ -71,7 +101,7 @@ export default function ConceptGraphView({ graphData, scores }) {
     });
 
     return { nodes: newNodes, edges: newEdges };
-  }, [graphData, scores]);
+  }, [graphData, scores, rootCauseId]);
 
   // Using absolute inset-0 forces ReactFlow to respect the parent container's dimensions on mobile
   return (

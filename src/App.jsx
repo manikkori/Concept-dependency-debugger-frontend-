@@ -33,6 +33,8 @@ export default function App() {
     "Computer Networks",
     "DBMS",
     "Data Structures",
+    "OOP Concepts",
+    "Web Dev Basics",
   ];
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -217,6 +219,7 @@ export default function App() {
                   questions={
                     quizData?.questions?.questions || quizData?.questions
                   }
+                  concepts={quizData?.graph?.concepts}
                   userAnswers={userAnswers}
                 />
               ) : (
@@ -243,6 +246,7 @@ export default function App() {
                   <ConceptGraphView
                     graphData={quizData.graph}
                     scores={diagnosisResult?.scores}
+                    rootCauseId={diagnosisResult?.rootWeakConceptId}
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full gap-3 text-slate-400">
@@ -252,6 +256,31 @@ export default function App() {
                     </span>
                   </div>
                 )}
+              </div>
+              <div
+                className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400"
+                aria-label="Knowledge graph legend"
+              >
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
+                  Strong
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
+                  Borderline
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
+                  Weak
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-6 border-t-4 border-red-500" />
+                  Root Cause
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-6 border-t-2 border-dashed border-red-500" />
+                  Affected
+                </span>
               </div>
             </div>
           </div>

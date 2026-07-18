@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   BrainCircuit,
   AlertTriangle,
@@ -13,10 +13,36 @@ export default function DiagnosisPanel({
   result,
   onReset,
   questions,
+  concepts,
   userAnswers,
 }) {
+  const [isMathVisible, setIsMathVisible] = useState(false);
+
   // Prevent rendering if there is no diagnostic result available from the AI engine
   if (!result) return null;
+
+  const conceptsById = Object.fromEntries(
+    (concepts || []).map((concept) => [concept.id, concept]),
+  );
+
+  const getAdjustmentReason = (concept) => {
+    const score = result.scores?.[concept.id];
+    if (!score || Math.abs(score.raw - score.adjusted) < 0.0001) return "";
+
+    const limitingPrerequisite = (concept.prerequisites || [])
+      .map((prerequisiteId) => ({
+        id: prerequisiteId,
+        score: result.scores?.[prerequisiteId]?.adjusted,
+      }))
+      .filter((prerequisite) => prerequisite.score !== undefined)
+      .sort((a, b) => a.score - b.score)[0];
+
+    const prerequisiteName = limitingPrerequisite
+      ? conceptsById[limitingPrerequisite.id]?.name || limitingPrerequisite.id
+      : "a prerequisite";
+
+    return `Adjusted down because prerequisite '${prerequisiteName}' is weak.`;
+  };
 
   return (
     <div className="flex flex-col h-full bg-transparent transition-colors animate-fade-in relative">
@@ -69,6 +95,63 @@ export default function DiagnosisPanel({
               {result.nextStep}
             </p>
           </div>
+        </div>
+
+        <div className="rounded-xl border border-slate-200/70 bg-white/40 dark:border-slate-700/60 dark:bg-slate-800/30">
+          <button
+            type="button"
+            onClick={() => setIsMathVisible((visible) => !visible)}
+            aria-expanded={isMathVisible}
+            className="flex w-full items-center justify-between px-4 py-3 text-left text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50/80 dark:text-slate-200 dark:hover:bg-slate-700/30"
+          >
+            <span>Show the math {isMathVisible ? "▴" : "▾"}</span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+              Raw vs adjusted
+            </span>
+          </button>
+
+          {isMathVisible && (
+            <div className="border-t border-slate-200/70 px-4 py-3 dark:border-slate-700/60">
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-left text-xs">
+                  <thead className="text-[10px] uppercase tracking-wider text-slate-400">
+                    <tr>
+                      <th className="pb-2 pr-3 font-bold">Concept</th>
+                      <th className="pb-2 pr-3 font-bold">Raw</th>
+                      <th className="pb-2 pr-3 font-bold">Adjusted</th>
+                      <th className="pb-2 font-bold">Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-700/60">
+                    {(concepts || []).map((concept) => {
+                      const score = result.scores?.[concept.id];
+                      if (!score) return null;
+
+                      const wasAdjusted =
+                        Math.abs(score.raw - score.adjusted) >= 0.0001;
+
+                      return (
+                        <tr key={concept.id} className="align-top">
+                          <td className="py-2 pr-3 font-semibold text-slate-700 dark:text-slate-200">
+                            {concept.name}
+                          </td>
+                          <td className="py-2 pr-3 text-slate-600 dark:text-slate-300">
+                            {Math.round(score.raw * 100)}%
+                          </td>
+                          <td className="py-2 pr-3 text-slate-600 dark:text-slate-300">
+                            {Math.round(score.adjusted * 100)}%
+                          </td>
+                          <td className="py-2 leading-relaxed text-slate-500 dark:text-slate-400">
+                            {wasAdjusted ? getAdjustmentReason(concept) : "-"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Detailed Question Breakdown and Scorecard */}
