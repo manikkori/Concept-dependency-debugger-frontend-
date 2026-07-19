@@ -136,7 +136,7 @@ export default function App() {
             <div className="flex items-center gap-3">
               {/* Powered by OpenAI Badge - Always Visible */}
               <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-1.5 font-display text-xs font-bold text-[var(--accent-green)] transition-colors">
-                <Sparkles className="w-3.5 h-3.5" />
+              
                 <span>Powered by OpenAI</span>
               </div>
 

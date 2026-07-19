@@ -182,7 +182,7 @@ export default function LandingPage({ onStart }) {
             <BrainCircuit className="h-4 w-4 text-[var(--accent-amber)]" />
             CDD.
           </div>
-          <span>Concept Dependency Debugger (developed by <a style={{color:'white'}} href="https://the-manik.vercel.app">Manik</a>) </span>
+          <span>Concept Dependency Debugger (developed by <a style={{color:'white', textDecoration:'underline'}} href="https://the-manik.vercel.app">Manik</a>) </span>
           <span>&copy; {new Date().getFullYear()}</span>
         </div>
       </footer>
