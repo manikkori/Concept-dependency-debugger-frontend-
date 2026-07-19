@@ -5,8 +5,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        stylish: ['"Playfair Display"', "serif"],
-        sans: ["Inter", "sans-serif"],
+        display: ['"JetBrains Mono"', "monospace"],
+        body: ["Manrope", "sans-serif"],
+        sans: ["Manrope", "sans-serif"],
       },
       // Custom animation for the floating background blobs
       animation: {

@@ -111,37 +111,31 @@ export default function App() {
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0B1120] transition-colors duration-500 font-sans relative">
-      {/* Background Blobs */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-15%] left-[-10%] w-[45rem] h-[45rem] bg-violet-400/30 dark:bg-violet-600/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-blob"></div>
-        <div
-          className="absolute bottom-[-15%] right-[-10%] w-[40rem] h-[40rem] bg-cyan-300/40 dark:bg-cyan-500/20 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-[120px] animate-blob"
-          style={{ animationDelay: "2s" }}
-        ></div>
-      </div>
+    <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)] transition-colors duration-500 font-body relative">
 
       {/* Navbar with Dropdown & OpenAI Badge */}
-      <nav className="sticky top-0 z-50 w-full bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border-b border-white/40 dark:border-slate-700/50 shadow-sm transition-colors duration-500">
+      <nav className="sticky top-0 z-50 w-full border-b border-[var(--border-hairline)] bg-[var(--bg-base)]/95 backdrop-blur-xl transition-colors duration-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div
-              className="flex items-center gap-2 cursor-pointer group"
+            <button
+              type="button"
+              className="flex items-center gap-2 cursor-pointer group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-green)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
               onClick={handleGoHome}
             >
-              <div className="p-2 bg-violet-100 dark:bg-slate-800 rounded-lg group-hover:bg-violet-200 dark:group-hover:bg-slate-700 transition-colors">
-                <BrainCircuit className="w-5 h-5 text-violet-600 dark:text-cyan-400" />
+              <div className="bg-[var(--bg-surface)] p-2 rounded-lg transition-colors group-hover:bg-[var(--border-hairline)]">
+                <BrainCircuit className="w-5 h-5 text-[var(--accent-amber)]" />
               </div>
-              <span className="text-xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">
-                CDD<span className="text-violet-600 dark:text-cyan-400">.</span>
+              <span className="font-display text-xl font-bold tracking-tight text-[var(--text-primary)]">
+                CDD
+                <span className="text-[var(--accent-amber)]">.</span>
               </span>
-            </div>
+            </button>
 
             {/* Right Side Controls */}
             <div className="flex items-center gap-3">
               {/* Powered by OpenAI Badge - Always Visible */}
-              <div className="hidden sm:flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1.5 rounded-full text-xs font-bold text-emerald-700 dark:text-emerald-400 border border-emerald-200/50 dark:border-emerald-800/50 backdrop-blur-sm shadow-sm transition-colors">
+              <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-3 py-1.5 font-display text-xs font-bold text-[var(--accent-green)] transition-colors">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Powered by OpenAI</span>
               </div>
@@ -151,26 +145,26 @@ export default function App() {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-200 border border-white/60 dark:border-slate-700/50 backdrop-blur-sm shadow-sm hover:bg-white dark:hover:bg-slate-700 transition-all"
+                    className="flex items-center gap-2 rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] px-4 py-2 font-display text-sm font-bold text-[var(--text-primary)] transition-colors hover:border-[var(--accent-amber)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-green)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
                   >
-                    <BookOpen className="w-4 h-4 text-violet-600 dark:text-cyan-400" />
+                    <BookOpen className="w-4 h-4 text-[var(--accent-amber)]" />
                     <span className="hidden sm:inline">{currentSubject}</span>
                     <ChevronDown
-                      className={`w-4 h-4 text-slate-500 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
+                      className={`w-4 h-4 text-[var(--text-muted)] transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`}
                     />
                   </button>
 
                   {/* Dropdown Menu */}
                   {isDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden animate-fade-in">
+                    <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] shadow-xl animate-fade-in">
                       {subjects.map((sub) => (
                         <button
                           key={sub}
                           onClick={() => handleSubjectChange(sub)}
-                          className={`w-full text-left px-4 py-3 text-sm font-semibold transition-colors ${
+                          className={`w-full text-left px-4 py-3 font-display text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:bg-[var(--border-hairline)] ${
                             currentSubject === sub
-                              ? "bg-violet-50 dark:bg-slate-700/50 text-violet-700 dark:text-cyan-400"
-                              : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700"
+                              ? "bg-[var(--border-hairline)] text-[var(--accent-amber)]"
+                              : "text-[var(--text-muted)] hover:bg-[var(--border-hairline)] hover:text-[var(--text-primary)]"
                           }`}
                         >
                           {sub}
@@ -184,7 +178,8 @@ export default function App() {
               {/* Theme Toggle */}
               <button
                 onClick={toggleTheme}
-                className="p-2.5 rounded-xl bg-white/60 dark:bg-slate-800/60 text-slate-700 dark:text-slate-200 shadow-sm border border-white/60 dark:border-slate-700/50 hover:bg-white dark:hover:bg-slate-700 backdrop-blur-sm transition-all"
+                aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+                className="rounded-lg border border-[var(--border-hairline)] bg-[var(--bg-surface)] p-2.5 text-[var(--text-muted)] transition-all hover:text-[var(--text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-green)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-base)]"
               >
                 {theme === "light" ? (
                   <Moon className="w-5 h-5" />
@@ -198,17 +193,17 @@ export default function App() {
       </nav>
 
       {/* Main Content */}
-      <main className="relative z-10 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 flex flex-col items-center">
+      <main className="relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center p-4 sm:p-6 lg:p-8">
         {currentPage === "landing" ? (
           <LandingPage onStart={handleStartAssessment} />
         ) : (
           <div className="flex flex-col lg:flex-row w-full gap-6 h-auto lg:h-[600px] animate-fade-in">
             {/* Left Panel - Quiz / Diagnosis */}
-            <div className="w-full lg:w-1/3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-2xl p-6 rounded-3xl shadow-xl border border-white/60 dark:border-slate-700/50 flex flex-col relative overflow-hidden transition-colors">
+            <div className="w-full lg:w-1/3 bg-[var(--bg-surface)] p-6 rounded-2xl shadow-xl shadow-black/10 border border-[var(--border-hairline)] flex flex-col relative overflow-hidden transition-colors">
               {isDiagnosing ? (
-                <div className="flex flex-col items-center justify-center h-full text-slate-600 dark:text-slate-300 space-y-4">
-                  <div className="w-12 h-12 border-4 border-violet-200 dark:border-slate-700 border-t-violet-600 dark:border-t-cyan-400 rounded-full animate-spin"></div>
-                  <p className="font-bold animate-pulse text-base">
+                <div className="flex flex-col items-center justify-center h-full text-[var(--text-muted)] space-y-4">
+                  <div className="w-12 h-12 border-4 border-[var(--border-hairline)] border-t-[var(--accent-amber)] rounded-full animate-spin"></div>
+                  <p className="font-display font-bold animate-pulse text-sm">
                     Running AI Engine...
                   </p>
                 </div>
@@ -231,17 +226,17 @@ export default function App() {
             </div>
 
             {/* Right Panel - Graph */}
-            <div className="w-full lg:w-2/3 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-slate-700/50 flex flex-col min-h-[500px] lg:min-h-0">
-              <h2 className="text-xl font-bold mb-4 border-b border-slate-100 dark:border-slate-800 pb-3 text-slate-800 dark:text-slate-100 flex items-center justify-between">
+            <div className="w-full lg:w-2/3 bg-[var(--bg-surface)] p-6 rounded-2xl shadow-xl shadow-black/10 border border-[var(--border-hairline)] flex flex-col min-h-[500px] lg:min-h-0">
+              <h2 className="font-display text-lg font-bold mb-4 border-b border-[var(--border-hairline)] pb-3 text-[var(--text-primary)] flex items-center justify-between">
                 <span className="flex items-center gap-2">
-                  <BrainCircuit className="w-5 h-5 text-violet-500 dark:text-cyan-400" />
+                  <BrainCircuit className="w-5 h-5 text-[var(--accent-amber)]" />
                   Knowledge Graph Tracker
                 </span>
-                <span className="text-sm font-bold text-violet-700 dark:text-cyan-300 bg-violet-50 dark:bg-slate-800 px-3 py-1 rounded-lg border border-violet-100 dark:border-slate-700">
+                <span className="font-display text-xs font-bold text-[var(--accent-amber)] bg-[var(--bg-base)] px-3 py-1 rounded-lg border border-[var(--border-hairline)]">
                   {currentSubject}
                 </span>
               </h2>
-              <div className="flex-1 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden bg-[#F8FAFC] dark:bg-slate-800/50 relative transition-colors">
+              <div className="flex-1 border border-dashed border-[var(--border-hairline)] rounded-xl overflow-hidden bg-[var(--bg-base)] relative transition-colors">
                 {quizData ? (
                   <ConceptGraphView
                     graphData={quizData.graph}
@@ -250,16 +245,16 @@ export default function App() {
                     allMastered={diagnosisResult?.allMastered}
                   />
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-full gap-3 text-slate-400">
-                    <div className="w-8 h-8 border-4 border-slate-200 dark:border-slate-700 border-t-violet-500 rounded-full animate-spin"></div>
-                    <span className="font-medium">
+                  <div className="flex flex-col items-center justify-center h-full gap-3 text-[var(--text-muted)]">
+                    <div className="w-8 h-8 border-4 border-[var(--border-hairline)] border-t-[var(--accent-amber)] rounded-full animate-spin"></div>
+                    <span className="font-body font-medium">
                       Loading {currentSubject} map...
                     </span>
                   </div>
                 )}
               </div>
               <div
-                className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[11px] font-semibold text-slate-500 dark:text-slate-400"
+                className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-display text-[10px] font-semibold text-[var(--text-muted)]"
                 aria-label="Knowledge graph legend"
               >
                 <span className="flex items-center gap-1.5">

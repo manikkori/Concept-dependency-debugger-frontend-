@@ -19,9 +19,9 @@ export default function ConceptGraphView({
     let yPosition = 40;
 
     graphData.concepts.forEach((concept, index) => {
-      // Base styling for unassessed topics using solid hex colors
-      let backgroundColor = "#ffffff";
-      let borderColor = "#cbd5e1";
+      // Node fills are self-contained functional indicators, never theme tokens.
+      let backgroundColor = "#f8fafc";
+      let borderColor = "#94a3b8";
       let fontColor = "#334155";
 
       const status = scores?.[concept.id]?.status;
@@ -31,19 +31,19 @@ export default function ConceptGraphView({
       // Apply dynamic styling based on the assessment scores.
       if (scores && scores[concept.id]) {
         if (status === "strong") {
-          backgroundColor = "#dcfce3"; // Solid Light Green
-          borderColor = "#22c55e";
-          fontColor = "#166534";
+          backgroundColor = "#dcfce7";
+          borderColor = "#16a34a";
+          fontColor = "#16a34a";
         }
         if (status === "borderline") {
-          backgroundColor = "#fef3c7"; // Solid Light Yellow
-          borderColor = "#eab308";
-          fontColor = "#854d0e";
+          backgroundColor = "#fef9c3";
+          borderColor = "#ca8a04";
+          fontColor = "#ca8a04";
         }
         if (status === "weak") {
-          backgroundColor = "#fee2e2"; // Solid Light Red
-          borderColor = "#ef4444";
-          fontColor = "#991b1b";
+          backgroundColor = "#fee2e2";
+          borderColor = "#dc2626";
+          fontColor = "#dc2626";
         }
       }
 
@@ -54,15 +54,15 @@ export default function ConceptGraphView({
         position: { x: index % 2 === 0 ? 50 : 250, y: yPosition },
         data: {
           label: (
-            <div className="flex flex-col items-center gap-1.5 leading-tight">
+            <div className="font-display flex flex-col items-center gap-1.5 leading-tight">
               <span>{concept.name}</span>
               {isRootCause && (
-                <span className="rounded-full bg-red-600 px-2 py-0.5 text-[9px] font-black tracking-wider text-white">
+                <span className="rounded-full bg-red-600 px-2 py-0.5 text-[9px] font-bold tracking-wider text-white">
                   ROOT CAUSE
                 </span>
               )}
               {isAffected && (
-                <span className="rounded-full bg-red-100 px-2 py-0.5 text-[9px] font-black tracking-wider text-red-700">
+                <span className="rounded-full bg-red-100 px-2 py-0.5 text-[9px] font-bold tracking-wider text-red-700">
                   AFFECTED
                 </span>
               )}
@@ -73,14 +73,15 @@ export default function ConceptGraphView({
           background: backgroundColor,
           color: fontColor,
           border: isRootCause
-            ? `4px solid ${borderColor}`
+            ? `3px solid ${borderColor}`
             : isAffected
               ? `2px dashed ${borderColor}`
               : `2px solid ${borderColor}`,
           padding: "16px 20px",
           borderRadius: "12px",
-          fontWeight: "800",
-          fontSize: "14px",
+          fontFamily: '"JetBrains Mono", monospace',
+          fontWeight: "700",
+          fontSize: "12px",
           width: 180,
           textAlign: "center",
           boxShadow: isRootCause
@@ -99,8 +100,11 @@ export default function ConceptGraphView({
           source: prereq,
           target: concept.id,
           animated: true,
-          style: { stroke: "#94a3b8", strokeWidth: 2 },
-          markerEnd: { type: MarkerType.ArrowClosed, color: "#94a3b8" },
+          style: { stroke: "var(--text-muted)", strokeWidth: 2 },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: "var(--text-muted)",
+          },
         });
       });
     });
@@ -117,7 +121,7 @@ export default function ConceptGraphView({
         fitView
         fitViewOptions={{ padding: 0.2 }}
       >
-        <Background color="#cbd5e1" gap={20} size={1} />
+        <Background color="var(--border-hairline)" gap={20} size={1} />
         <Controls showInteractive={false} />
       </ReactFlow>
     </div>

@@ -1,9 +1,100 @@
-/* Import fonts for standard text and stylish headings */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Manrope:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --bg-base: #f7f8fa;
+  --bg-surface: #ffffff;
+  --border-hairline: #e2e5ea;
+  --text-primary: #14181f;
+  --text-muted: #5b6472;
+  --accent-amber: #e8720c;
+  --accent-green: #1fa968;
+}
+
+:root.dark {
+  --bg-base: #0b0f14;
+  --bg-surface: #131822;
+  --border-hairline: #232b38;
+  --text-primary: #edeff4;
+  --text-muted: #8891a3;
+  --accent-amber: #ff8a3d;
+  --accent-green: #3ecf8e;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: "Manrope", sans-serif;
+}
+
+.dependency-root {
+  animation: dependency-root-pulse 5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.dependency-flow {
+  stroke-dasharray: 10 14;
+  animation: dependency-flow-travel 5s linear infinite;
+}
+
+.dependency-flow.flow-1 {
+  animation-delay: 0.7s;
+}
+
+.dependency-flow.flow-2 {
+  animation-delay: 1.25s;
+}
+
+.dependency-flow.flow-3 {
+  animation-delay: 1.8s;
+}
+
+.dependency-flow.flow-4 {
+  animation-delay: 2.35s;
+}
+
+@keyframes dependency-root-pulse {
+  0%,
+  56%,
+  100% {
+    filter: drop-shadow(0 0 0 rgba(255, 138, 61, 0));
+    transform: scale(1);
+  }
+  10%,
+  22% {
+    filter: drop-shadow(0 0 9px rgba(255, 138, 61, 0.85));
+    transform: scale(1.12);
+  }
+}
+
+@keyframes dependency-flow-travel {
+  0%,
+  12% {
+    opacity: 0;
+    stroke-dashoffset: 48;
+  }
+  24%,
+  52% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  66%,
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -48;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dependency-root,
+  .dependency-flow {
+    animation: none;
+  }
+}
 
 /* Custom Scrollbar Configuration */
 .custom-scrollbar::-webkit-scrollbar {
@@ -15,11 +106,6 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
+  background-color: var(--border-hairline);
   border-radius: 20px;
-}
-
-/* Dark mode scrollbar adaptation */
-.dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #5C3626;
 }
