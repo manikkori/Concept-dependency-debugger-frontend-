@@ -110,7 +110,7 @@ export default function LandingPage({ onStart }) {
       <section className="mx-auto grid w-full max-w-6xl items-center gap-12 pb-20 pt-16 lg:grid-cols-[1.15fr_0.85fr] lg:pb-28 lg:pt-24">
         <div className="max-w-3xl">
           <p className="mb-5 font-display text-xs font-bold tracking-wide text-[var(--accent-amber)]">
-            &gt; root_cause_analysis
+            &gt; Concept_Dependency_Debugger
           </p>
           <h1 className="font-display text-4xl font-bold leading-[1.08] tracking-[-0.06em] text-[var(--text-primary)] sm:text-5xl lg:text-6xl">
             Trace the gap.
@@ -182,7 +182,7 @@ export default function LandingPage({ onStart }) {
             <BrainCircuit className="h-4 w-4 text-[var(--accent-amber)]" />
             CDD.
           </div>
-          <span>Concept Dependency Debugger</span>
+          <span>Concept Dependency Debugger (developed by <a style={{color:'white'}} href="https://the-manik.vercel.app">Manik</a>) </span>
           <span>&copy; {new Date().getFullYear()}</span>
         </div>
       </footer>
