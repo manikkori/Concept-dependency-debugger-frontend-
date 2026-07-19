@@ -56,15 +56,26 @@ export default function DiagnosisPanel({
 
       {/* Scrollable content area with ample bottom padding to clear the fixed action button */}
       <div className="flex-1 overflow-y-auto pr-3 pb-24 space-y-5 custom-scrollbar">
-        {/* Identified Root Cause Alert - Warning styling */}
-        <div className="bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border-l-4 border-red-500 p-4 rounded-r-xl shadow-sm">
-          <span className="flex items-center gap-2 text-xs text-red-600 dark:text-red-400 font-bold uppercase tracking-wider mb-1.5">
-            <AlertTriangle className="w-4 h-4" /> Root Cause
-          </span>
-          <span className="text-xl text-red-700 dark:text-red-300 font-black tracking-tight">
-            {result.rootWeakConceptId.replace("-", " ").toUpperCase()}
-          </span>
-        </div>
+        {result.allMastered ? (
+          <div className="bg-emerald-50/80 dark:bg-emerald-900/30 backdrop-blur-sm border-l-4 border-emerald-500 p-4 rounded-r-xl shadow-sm">
+            <span className="flex items-center gap-2 text-xl text-emerald-700 dark:text-emerald-300 font-black tracking-tight">
+              <CheckCircle2 className="w-5 h-5" /> All Concepts Mastered!
+            </span>
+            <p className="mt-1.5 text-sm font-medium text-emerald-700/80 dark:text-emerald-300/80">
+              Your foundation is strong across the full learning chain.
+            </p>
+          </div>
+        ) : (
+          <div className="bg-red-50/80 dark:bg-red-900/30 backdrop-blur-sm border-l-4 border-red-500 p-4 rounded-r-xl shadow-sm">
+            <span className="flex items-center gap-2 text-xs text-red-600 dark:text-red-400 font-bold uppercase tracking-wider mb-1.5">
+              <AlertTriangle className="w-4 h-4" /> Root Cause
+            </span>
+            <span className="text-xl text-red-700 dark:text-red-300 font-black tracking-tight">
+              {result.rootWeakConceptId?.replaceAll("-", " ").toUpperCase() ||
+                "No root cause identified"}
+            </span>
+          </div>
+        )}
 
         {/* AI-Generated Diagnosis Insights wrapped in glassy styled containers */}
         <div className="space-y-5 bg-white/50 dark:bg-slate-800/40 backdrop-blur-md p-5 rounded-xl border border-white/60 dark:border-slate-700/50 shadow-sm">

@@ -2,7 +2,12 @@ import React, { useMemo } from "react";
 import ReactFlow, { Background, Controls, MarkerType } from "reactflow";
 import "reactflow/dist/style.css";
 
-export default function ConceptGraphView({ graphData, scores, rootCauseId }) {
+export default function ConceptGraphView({
+  graphData,
+  scores,
+  rootCauseId,
+  allMastered,
+}) {
   // Memoize the computation of nodes and edges to optimize rendering performance
   const { nodes, edges } = useMemo(() => {
     if (!graphData || !graphData.concepts) return { nodes: [], edges: [] };
@@ -20,7 +25,7 @@ export default function ConceptGraphView({ graphData, scores, rootCauseId }) {
       let fontColor = "#334155";
 
       const status = scores?.[concept.id]?.status;
-      const isRootCause = rootCauseId === concept.id;
+      const isRootCause = !allMastered && rootCauseId === concept.id;
       const isAffected = status === "weak" && !isRootCause;
 
       // Apply dynamic styling based on the assessment scores.
@@ -101,7 +106,7 @@ export default function ConceptGraphView({ graphData, scores, rootCauseId }) {
     });
 
     return { nodes: newNodes, edges: newEdges };
-  }, [graphData, scores, rootCauseId]);
+  }, [allMastered, graphData, scores, rootCauseId]);
 
   // Using absolute inset-0 forces ReactFlow to respect the parent container's dimensions on mobile
   return (

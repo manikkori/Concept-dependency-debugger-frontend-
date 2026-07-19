@@ -247,6 +247,7 @@ export default function App() {
                     graphData={quizData.graph}
                     scores={diagnosisResult?.scores}
                     rootCauseId={diagnosisResult?.rootWeakConceptId}
+                    allMastered={diagnosisResult?.allMastered}
                   />
                 ) : (
                   <div className="flex flex-col items-center justify-center h-full gap-3 text-slate-400">
